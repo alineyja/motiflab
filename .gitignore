@@ -1,0 +1,31 @@
+#питон
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.egs/
+.ipynb_checkpoints/
+
+# с++
+build/
+dist/
+*.egg-info/
+*.so
+*.lib
+*.exp
+*.obj
+*.o
+*.out
+*.a
+
+#данные
+data/raw/*
+!data/raw/.gitkeep
+data/sandbox/*
+*.fai
+
+#вс код
+.vscode/
+.idea/
+.DS_Store
