@@ -17,6 +17,8 @@ from motiflab.datasets.genomic_dataset import GenomicDataset
 from motiflab.models.cnn import MotifCNN
 from motiflab.interpretation.motif import MotifInterpreter
 from motiflab.bioinformatics.coordinates import GenomeCoordinates
+#from motiflab.visualization.logo import plot_motif_logo
+from motiflab.visualization.structure import generate_ctcf_3d_view
 
 #генератор случайных чисел
 torch.manual_seed(42)
@@ -128,7 +130,50 @@ def main():
     classifier_weights = model.classifier[1].weight.detach().cpu().numpy()[0]
     best_filter_idx = int(np.argmax(classifier_weights))
     print(f"Active filter: Index {best_filter_idx} (Linear weight: {classifier_weights[best_filter_idx]:.4f})")
+
+    positive_sequences = []
+    with FastaExtractor(raw_dir / "chr22.fa", alphabet) as ex:
+        for p in resized_peaks:
+            positive_sequences.append(ex.extract(p))
+    print("Scanning DNA sequences to find motif hits...")
+    seqlets = interpreter.extract_activating_seqlets(
+        model=model, 
+        sequences=positive_sequences, 
+        filter_idx=best_filter_idx, 
+        threshold=0.75
+    )
+    print(f"Found {len(seqlets)} strong motif hits in the genome!")
     
+    if len(seqlets) > 0:
+        # Строим "резкую" матрицу
+        sharp_ppm = interpreter.seqlets_to_ppm(seqlets)
+        ic = interpreter.calculate_information_content(sharp_ppm)
+        
+        consensus_indices = np.argmax(sharp_ppm, axis=0)
+        consensus_seq = "".join(alphabet.decode_symbol(idx) for idx in consensus_indices)
+        
+        print("\n" + "=" * 50)
+        print("SHARP BIOLOGICAL MOTIF RESULT")
+        print("=" * 50)
+        print(f"CTCF Motif Consensus (JASPAR): CCACYAGGTGGCAG")
+        print(f"Reconstructed by MotifCNN:     {consensus_seq}")
+        print(f"Total Information Content:     {np.sum(ic):.2f} bits (Much higher!)")
+        print("=" * 50)
+        
+        # Рисуем логотип!
+        results_dir = root_dir / "results"
+        results_dir.mkdir(exist_ok=True)
+        logo_path = results_dir / "ctcf_motif_logo.png"
+        
+        #plot_motif_logo(sharp_ppm, alphabet.symbols, logo_path, title=f"Learned CTCF Motif (Filter {best_filter_idx})")
+        print(f"\n[SUCCESS] Motif Logo saved to: {logo_path}")
+        html_path = results_dir / "ctcf_3d_structure.html"
+        generate_ctcf_3d_view(html_path)
+        print(f"[SUCCESS] Interactive 3D Structure saved to: {html_path}")
+    else:
+        print("No seqlets found. Try lowering the threshold or training for more epochs.")
+
+
     #Конвертируем веса в PPM
     filters_weights = model.get_filters()
     ppm = interpreter.weights_to_ppm(filters_weights)[best_filter_idx]

@@ -87,3 +87,5 @@ Pos:    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14
   G:  25  26  29  24  22  22  25  22  22  29  28  25  32  31  23
   T:  26  27  24  23  24  24  24  24  29  25  23  28  23  23  25
 Information Content sum (bits): 0.11 / 30.0
+Performs in silico mutagenesis to evaluate the functional impact 
+    of every possible single-nucleotide mutation in a DNA sequence.

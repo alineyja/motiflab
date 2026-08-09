@@ -6,7 +6,7 @@ __pycache__/
 .pytest_cache/
 .egs/
 .ipynb_checkpoints/
-
+.venv/
 # с++
 build/
 dist/
