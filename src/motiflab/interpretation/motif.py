@@ -42,6 +42,7 @@ class MotifInterpreter:
         
         # глобальный максимум активации фильтра по всем данным
         all_activations = []
+        device = next(model.parameters()).device
         
         with torch.no_grad():
             for seq in sequences:
@@ -49,7 +50,7 @@ class MotifInterpreter:
                 # индексы от алфавита
                 indices = np.asarray(self.alphabet.encode(seq.sequence), dtype=np.int64)
                 matrix = np.eye(self.alphabet.size, dtype=np.float32)[indices].T
-                tensor_x = torch.from_numpy(matrix).unsqueeze(0) # (1, 4, L)
+                tensor_x = torch.from_numpy(matrix).unsqueeze(0).to(device)
                 
                 # прогоняем только через сверточный слой (1, F, L)
                 conv_out = model.relu(model.conv(tensor_x))
