@@ -79,7 +79,8 @@ def main():
 
     print("скачивание Chromosome 22 (для быстрого старта)")
     download_and_extract("chr22", FA_MIRRORS_CHR22, raw_dir)
-    
+    print("скачивание всего генома человека")
+    download_and_extract("hg38", ["https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz"], raw_dir)
    
     # print("весь геном hg38 (для полного эксперимента)")
     # download_and_extract("hg38", URLS["hg38_full"], raw_dir)

@@ -53,7 +53,7 @@ class MotifInterpreter:
                 tensor_x = torch.from_numpy(matrix).unsqueeze(0).to(device)
                 
                 # прогоняем только через сверточный слой (1, F, L)
-                conv_out = model.relu(model.conv(tensor_x))
+                conv_out = model.relu(model.conv1(tensor_x))
                 # активации нужного фильтра (L,)
                 act = conv_out[0, filter_idx].cpu().numpy()
                 all_activations.append((seq.sequence, act))
