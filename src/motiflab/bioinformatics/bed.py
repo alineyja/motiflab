@@ -21,10 +21,19 @@ def parse_bed(filepath: str | Path) -> Iterator[GenomeCoordinates]:
                 strand_str = parts[5]
                 if strand_str in {"+", "-", "."}:
                     strand = Strand(strand_str)
-                    
+
+            signal_val = 0.0
+            if len(parts) >= 7:
+                try:
+                    signal_val = float(parts[6])
+                except ValueError:
+                    signal_val = 0.0
+
+
             yield GenomeCoordinates(
                 chromosome=chrom,
                 start=start,
                 end=end,
-                strand=strand
+                strand=strand,
+                signal_value=signal_val
             )
