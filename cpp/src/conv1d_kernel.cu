@@ -7,7 +7,7 @@ __global__ void conv1d_forward_kernel(
     const float* __restrict__ weight, // весовой тензор размерности (F, C, K)
     const float* __restrict__ bias,  // смещение размерности (F)
     float* __restrict__ output, // выходной тензор размерности (B, F, output_length)
-    int B, int C, int L, int K, int F, int output_length
+    int B, int C, int L, int K, int F, int output_length 
 ){
     int idx = blockIdx.x * blockDim.x + threadIdx.x; // вычисляем глобальный индекс потока 
     int total_threads = B * F * output_length; // общее количество потоков, необходимых для обработки всех элементов выходного тензора
