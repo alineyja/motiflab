@@ -1,4 +1,4 @@
-Interpretable DL Framework for Regulatory DNA Analysis
+Custom Interpretable DL Framework for Regulatory DNA Analysis
 
 Цель проекта автоматическое обнаружение регуляторных мотивов ДНК (на примере белка-архитектора генома CTCF) непосредственно из сырых геномных последовательностей,а также их интерпретация и визуализация в 2D и 3D.
 алгоритм:
